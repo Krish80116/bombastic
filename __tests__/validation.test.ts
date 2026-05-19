@@ -16,6 +16,7 @@ describe('validateShipping', () => {
   it('accepts a valid form', () => {
     const result = validateShipping(valid);
     expect(result.ok).toBe(true);
+    if (result.ok) expect(result.value).toStrictEqual(valid);
   });
 
   it('rejects an empty name', () => {

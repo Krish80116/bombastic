@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { generateReceiptId } from '@/lib/receipt';
 
 describe('generateReceiptId', () => {
-  it('starts with BMB-', () => {
-    expect(generateReceiptId()).toMatch(/^BMB-/);
+  it('matches BMB-<ts>-<rand6> format', () => {
+    expect(generateReceiptId()).toMatch(/^BMB-[0-9A-Z]+-[0-9A-Z]{6}$/);
   });
 
   it('is unique across rapid calls', () => {

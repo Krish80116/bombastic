@@ -8,11 +8,12 @@ export type CartEntry = {
 
 export type CartLine = {
   slug: string;
+  name: string;
   size: ProductSize;
   qty: number;
   unitPriceInr: number;
   lineTotalInr: number;
-  product: Product;
+  primaryImage: string;
 };
 
 export type CartTotals = {
@@ -34,11 +35,12 @@ export function computeCartTotals(cart: CartEntry[], catalog: Product[]): CartTo
     if (qty === 0) continue;
     lines.push({
       slug: product.slug,
+      name: product.name,
       size: entry.size,
       qty,
       unitPriceInr: product.priceInr,
       lineTotalInr: product.priceInr * qty,
-      product,
+      primaryImage: product.images[0],
     });
   }
 
