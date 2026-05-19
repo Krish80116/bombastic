@@ -1,4 +1,4 @@
-import type { Product } from '@/types/product';
+import type { Product, ProductSize } from '@/types/product';
 
 export const products: Product[] = [
   {
@@ -61,6 +61,6 @@ export function getProduct(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
-export function getStock(product: Product, size: string): number {
+export function getStock(product: Product, size: ProductSize): number {
   return product.sizes.find((s) => s.size === size)?.stock ?? 0;
 }
