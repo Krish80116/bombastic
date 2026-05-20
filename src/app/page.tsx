@@ -35,7 +35,7 @@ export default function HomePage() {
 
       <section className="px-7 pb-24">
         <div className="font-mono text-[10px] tracking-[0.2em] text-[var(--color-muted-dark)] mb-6">
-          // FEATURED
+          {'// FEATURED'}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featured.map((p) => (

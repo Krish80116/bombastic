@@ -23,6 +23,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe rehydration: state must start empty on server, then sync from localStorage after mount
       if (raw) setEntries(JSON.parse(raw));
     } catch {
       // corrupt localStorage -> ignore

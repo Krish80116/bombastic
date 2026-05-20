@@ -29,7 +29,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         <div>
           <div className="font-mono text-[10px] tracking-[0.25em] text-[var(--color-muted-light)] mb-2">
-            // {product.dropId.toUpperCase()}
+            {`// ${product.dropId.toUpperCase()}`}
           </div>
           <h1 className="font-display text-4xl md:text-5xl tracking-tight">{product.name}</h1>
           <div className="font-mono text-sm mt-2">₹ {product.priceInr.toLocaleString('en-IN')}</div>

@@ -8,7 +8,7 @@ export default function AboutPage() {
       <Nav surface="dark" />
       <section className="px-7 py-16 max-w-2xl">
         <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-muted-dark)] mb-4">
-          // BOMBASTIC
+          {'// BOMBASTIC'}
         </div>
         <h1 className="font-display text-4xl md:text-5xl tracking-tight mb-8">
           Made in Delhi. Made to be worn.
