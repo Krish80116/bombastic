@@ -168,7 +168,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full mt-6 px-8 py-4 bg-black text-[var(--color-bg-light)] font-mono text-[11px] tracking-[0.25em] uppercase disabled:opacity-40"
+          className="w-full mt-6 px-8 py-4 bg-black text-white font-mono text-xs tracking-[0.25em] uppercase disabled:opacity-40 hover:bg-black/90"
         >
           {submitting ? 'Opening payment…' : 'Pay with Razorpay →'}
         </button>

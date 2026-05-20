@@ -5,8 +5,8 @@
   --color-bg-light: #f3f1ec;
   --color-text-dark: #ececec;
   --color-text-light: #0a0a0a;
-  --color-muted-dark: #888888;
-  --color-muted-light: #666666;
+  --color-muted-dark: #a8a8a8;
+  --color-muted-light: #8a8a8a;
   --color-accent: #ff3b2f;
 
   --font-display: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -21,5 +21,6 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: inherit; text-decoration: none; }
-* { box-sizing: border-box; }
+@layer base {
+  a { text-decoration: none; }
+}

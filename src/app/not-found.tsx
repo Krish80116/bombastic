@@ -14,7 +14,7 @@ export default function NotFound() {
         <h1 className="font-display text-5xl">Nothing here.</h1>
         <Link
           href="/shop"
-          className="inline-block mt-8 bg-[var(--color-text-dark)] text-[var(--color-bg-dark)] px-6 py-3 font-mono text-[10px] tracking-[0.25em] uppercase"
+          className="inline-block mt-8 bg-white text-black px-6 py-3 font-mono text-xs tracking-[0.25em] uppercase hover:bg-white/90"
         >
           Back to Shop →
         </Link>

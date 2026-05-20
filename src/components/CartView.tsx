@@ -17,7 +17,7 @@ export function CartView() {
         </div>
         <Link
           href="/shop"
-          className="inline-block mt-6 px-6 py-3 bg-black text-[var(--color-bg-light)] font-mono text-[10px] tracking-[0.25em] uppercase"
+          className="inline-block mt-6 px-6 py-3 bg-black text-white font-mono text-xs tracking-[0.25em] uppercase hover:bg-black/90"
         >
           Shop Drop 01 →
         </Link>
@@ -71,7 +71,7 @@ export function CartView() {
 
       <Link
         href="/checkout"
-        className="inline-block mt-6 px-8 py-4 bg-black text-[var(--color-bg-light)] font-mono text-[11px] tracking-[0.25em] uppercase"
+        className="inline-block mt-6 px-8 py-4 bg-black text-white font-mono text-xs tracking-[0.25em] uppercase hover:bg-black/90"
       >
         Checkout →
       </Link>

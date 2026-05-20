@@ -38,7 +38,7 @@ export function AddToCartForm({ product }: { product: Product }) {
                 out
                   ? 'border-black/20 text-black/30 line-through cursor-not-allowed'
                   : active
-                    ? 'border-black bg-black text-[var(--color-bg-light)]'
+                    ? 'border-black bg-black text-white'
                     : 'border-black/30'
               }`}
             >
@@ -52,7 +52,7 @@ export function AddToCartForm({ product }: { product: Product }) {
         type="button"
         onClick={handleAdd}
         disabled={!selected}
-        className="w-full md:w-auto px-8 py-4 bg-black text-[var(--color-bg-light)] font-mono text-[11px] tracking-[0.25em] uppercase disabled:opacity-40"
+        className="w-full md:w-auto px-8 py-4 bg-black text-white font-mono text-xs tracking-[0.25em] uppercase disabled:opacity-40 hover:bg-black/90"
       >
         Add to Cart — ₹ {product.priceInr.toLocaleString('en-IN')}
       </button>

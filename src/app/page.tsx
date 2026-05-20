@@ -27,7 +27,7 @@ export default function HomePage() {
 
         <Link
           href="/shop"
-          className="inline-block mt-10 bg-[var(--color-text-dark)] text-[var(--color-bg-dark)] px-6 py-3 font-mono text-[10px] tracking-[0.25em] uppercase"
+          className="inline-block mt-10 bg-white text-black px-6 py-3 font-mono text-xs tracking-[0.25em] uppercase hover:bg-white/90"
         >
           Enter Store →
         </Link>
