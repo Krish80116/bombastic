@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bombastic
 
-## Getting Started
+Streetwear storefront for the Bombastic brand. Built with Next.js + Razorpay.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
+cp .env.local.example .env.local   # fill in real keys
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tests
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test            # one-off
+npm run test:watch  # watch mode
+```
 
-## Learn More
+## Day-to-day owner workflow
 
-To learn more about Next.js, take a look at the following resources:
+### Adding a new product
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Drop product photos into `public/products/`. Use sensible filenames like `dropname-color-1.jpg`.
+2. Open `src/data/products.ts` and add a new entry to the `products` array.
+3. Commit + push. Vercel auto-deploys in ~30 seconds.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Decrementing stock after shipping an order
 
-## Deploy on Vercel
+1. Open `src/data/products.ts`.
+2. Find the matching `slug` and `size`, decrement the `stock` number.
+3. Commit + push.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Marking a product sold out
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Change `status: 'live'` to `status: 'sold_out'` for that product.
+
+### Switching from test to live Razorpay keys
+
+In Vercel project settings → Environment Variables:
+
+- Update `RAZORPAY_KEY_ID` to your `rzp_live_...` key id
+- Update `RAZORPAY_KEY_SECRET` to your live key secret
+- Update `NEXT_PUBLIC_RAZORPAY_KEY_ID` to the live key id
+- Update `RAZORPAY_WEBHOOK_SECRET` to the live webhook secret
+- Redeploy
+
+### Setting up the webhook in Razorpay
+
+In the Razorpay dashboard:
+
+1. Go to Webhooks → Add new webhook.
+2. URL: `https://<yourdomain>/api/webhooks/razorpay`
+3. Secret: paste a long random string. Save the same string as `RAZORPAY_WEBHOOK_SECRET` in Vercel.
+4. Enable event: `payment.captured`.
+
+## Launch checklist
+
+- [ ] Real product photos shot and uploaded
+- [ ] All product descriptions and prices finalized
+- [ ] Domain DNS pointed at Vercel
+- [ ] Resend domain verified (DKIM/SPF set)
+- [ ] Razorpay live keys in Vercel env vars
+- [ ] Webhook URL configured in Razorpay
+- [ ] Test purchase with own card for the cheapest item — refund afterward
+- [ ] Mobile checkout tested on a real phone
+- [ ] Order confirmation email received by both customer and owner
+
+## Tech stack
+
+- Next.js 15 + TypeScript + Tailwind v4
+- Razorpay Standard Checkout for payments
+- Resend for transactional email
+- Vercel for hosting
+- No database — product catalog lives in `src/data/products.ts`, orders live in Razorpay
