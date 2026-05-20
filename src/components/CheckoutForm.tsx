@@ -1,12 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from './CartProvider';
 import { computeCartTotals } from '@/lib/cart-math';
 import { products } from '@/data/products';
 import { validateShipping, type ShippingForm } from '@/lib/validation';
 import type { RazorpayOptions } from './RazorpayScript';
+
+type PincodeResponse = Array<{
+  Status: string;
+  PostOffice?: Array<{ District: string; State: string }>;
+}>;
 
 const empty: ShippingForm = {
   fullName: '',
@@ -28,14 +33,49 @@ export function CheckoutForm() {
   const [errors, setErrors] = useState<Partial<Record<keyof ShippingForm, string>>>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [pincodeStatus, setPincodeStatus] = useState<'idle' | 'looking' | 'notfound'>('idle');
 
   function field<K extends keyof ShippingForm>(key: K) {
     return {
       value: form[key],
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setForm({ ...form, [key]: e.target.value }),
+        setForm((f) => ({ ...f, [key]: e.target.value })),
     };
   }
+
+  const pincodeIsValid = /^\d{6}$/.test(form.pincode);
+
+  useEffect(() => {
+    if (!pincodeIsValid) return;
+    const ctrl = new AbortController();
+    let active = true;
+    fetch(`https://api.postalpincode.in/pincode/${form.pincode}`, { signal: ctrl.signal })
+      .then((r) => r.json() as Promise<PincodeResponse>)
+      .then((data) => {
+        if (!active) return;
+        const entry = data?.[0];
+        const offices = entry?.PostOffice;
+        if (entry?.Status === 'Success' && offices && offices.length > 0) {
+          const { District, State } = offices[0];
+          setForm((f) => ({ ...f, city: District, state: State }));
+          setPincodeStatus('idle');
+        } else {
+          setPincodeStatus('notfound');
+        }
+      })
+      .catch(() => {
+        if (active) setPincodeStatus('idle');
+      });
+    queueMicrotask(() => {
+      if (active) setPincodeStatus('looking');
+    });
+    return () => {
+      active = false;
+      ctrl.abort();
+    };
+  }, [form.pincode, pincodeIsValid]);
+
+  const visiblePincodeStatus = pincodeIsValid ? pincodeStatus : 'idle';
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -129,16 +169,30 @@ export function CheckoutForm() {
           Shipping
         </div>
 
-        <Input label="Full name" {...field('fullName')} err={errors.fullName} />
-        <Input label="Email" type="email" {...field('email')} err={errors.email} />
-        <Input label="Phone (10 digits)" {...field('phone')} err={errors.phone} />
-        <Input label="Address line 1" {...field('addressLine1')} err={errors.addressLine1} />
-        <Input label="Address line 2 (optional)" {...field('addressLine2')} />
+        <Input label="Full name" autoComplete="name" {...field('fullName')} err={errors.fullName} />
+        <Input label="Email" type="email" autoComplete="email" {...field('email')} err={errors.email} />
+        <Input label="Phone (10 digits)" type="tel" autoComplete="tel-national" inputMode="numeric" {...field('phone')} err={errors.phone} />
+        <Input label="Address line 1" autoComplete="address-line1" {...field('addressLine1')} err={errors.addressLine1} />
+        <Input label="Address line 2 (optional)" autoComplete="address-line2" {...field('addressLine2')} />
+        <Input
+          label="Pincode"
+          autoComplete="postal-code"
+          inputMode="numeric"
+          maxLength={6}
+          {...field('pincode')}
+          err={errors.pincode}
+          hint={
+            visiblePincodeStatus === 'looking'
+              ? 'Looking up…'
+              : visiblePincodeStatus === 'notfound'
+              ? 'Pincode not found — enter city/state manually'
+              : undefined
+          }
+        />
         <div className="grid grid-cols-2 gap-4">
-          <Input label="City" {...field('city')} err={errors.city} />
-          <Input label="State" {...field('state')} err={errors.state} />
+          <Input label="City" autoComplete="address-level2" {...field('city')} err={errors.city} />
+          <Input label="State" autoComplete="address-level1" {...field('state')} err={errors.state} />
         </div>
-        <Input label="Pincode" {...field('pincode')} err={errors.pincode} />
       </div>
 
       <aside className="border-l border-black/10 pl-8">
@@ -180,8 +234,9 @@ export function CheckoutForm() {
 function Input({
   label,
   err,
+  hint,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & { label: string; err?: string }) {
+}: React.InputHTMLAttributes<HTMLInputElement> & { label: string; err?: string; hint?: string }) {
   return (
     <label className="block">
       <span className="block font-mono text-[10px] tracking-[0.2em] uppercase text-[var(--color-muted-light)] mb-1">
@@ -192,6 +247,7 @@ function Input({
         className="w-full border-b border-black/30 py-2 bg-transparent focus:outline-none focus:border-black"
       />
       {err && <span className="block mt-1 text-[10px] font-mono text-[var(--color-accent)]">{err}</span>}
+      {!err && hint && <span className="block mt-1 text-[10px] font-mono text-[var(--color-muted-light)]">{hint}</span>}
     </label>
   );
 }
