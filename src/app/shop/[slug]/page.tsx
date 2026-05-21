@@ -1,8 +1,10 @@
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Nav } from '@/components/Nav';
 import { Footer } from '@/components/Footer';
 import { SurfaceLayout } from '@/components/SurfaceLayout';
 import { AddToCartForm } from '@/components/AddToCartForm';
+import { SizeChart } from '@/components/SizeChart';
 import { getProduct, products } from '@/data/products';
 
 export function generateStaticParams() {
@@ -19,12 +21,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <Nav surface="light" />
 
       <section className="px-7 pt-8 pb-24 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div>
-          <div className="aspect-[3/4] bg-black/5 flex items-center justify-center">
-            <span className="font-mono text-[10px] tracking-[0.2em] text-[var(--color-muted-light)]">
-              {product.name}
-            </span>
-          </div>
+        <div className="flex flex-col gap-3">
+          {product.images.map((src, i) => (
+            <div key={src} className="relative aspect-[3/4] bg-black/5 overflow-hidden">
+              <Image
+                src={src}
+                alt={`${product.name} — view ${i + 1}`}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover"
+                priority={i === 0}
+              />
+            </div>
+          ))}
         </div>
 
         <div>
@@ -41,6 +50,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
 
           <AddToCartForm product={product} />
+
+          <SizeChart />
         </div>
       </section>
 
