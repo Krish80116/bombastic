@@ -55,6 +55,24 @@ export const products: Product[] = [
     dropId: 'drop-01',
     status: 'live',
   },
+  {
+    slug: 'cockroach-tee-tricolour',
+    name: 'Cockroach Tee — Tricolour',
+    priceInr: 999,
+    description:
+      'Limited drop. Cockroach Army mascot front, "Power to the People" back graphic. Tricolour ringer collar and cuffs, flag wave at the hem. Oversized cut, heavyweight cotton.',
+    materials: '240gsm 100% cotton. Screen-printed in Delhi.',
+    images: ['/products/cockroach-tee-tricolour-1.png'],
+    sizes: [
+      { size: 'S', stock: 6 },
+      { size: 'M', stock: 8 },
+      { size: 'L', stock: 8 },
+      { size: 'XL', stock: 6 },
+      { size: 'XXL', stock: 3 },
+    ],
+    dropId: 'drop-01',
+    status: 'live',
+  },
 ];
 
 export function getProduct(slug: string): Product | undefined {
