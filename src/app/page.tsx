@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Nav } from '@/components/Nav';
 import { Footer } from '@/components/Footer';
@@ -6,7 +7,8 @@ import { BrandMark } from '@/components/BrandMark';
 import { products } from '@/data/products';
 
 export default function HomePage() {
-  const featured = products.filter((p) => p.status === 'live').slice(0, 3);
+  const live = products.filter((p) => p.status === 'live');
+  const hero = live[0];
 
   return (
     <SurfaceLayout surface="dark">
@@ -14,7 +16,7 @@ export default function HomePage() {
 
       <section className="px-7 pt-12 pb-32">
         <div className="font-mono text-[10px] tracking-[0.25em] text-[var(--color-muted-dark)] mb-4">
-          [ DROP_01 / LIVE / {products.filter((p) => p.dropId === 'drop-01').length} PIECES ]
+          [ DROP_01 / LIVE / {live.length} {live.length === 1 ? 'PIECE' : 'PIECES'} ]
         </div>
 
         <h1 className="text-[88px] md:text-[120px]">
@@ -33,26 +35,53 @@ export default function HomePage() {
         </Link>
       </section>
 
-      <section className="px-7 pb-24">
-        <div className="font-mono text-[10px] tracking-[0.2em] text-[var(--color-muted-dark)] mb-6">
-          {'// FEATURED'}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featured.map((p) => (
-            <Link key={p.slug} href={`/shop/${p.slug}`} className="block">
-              <div className="aspect-[3/4] bg-white/5 mb-3 flex items-center justify-center">
-                <span className="font-mono text-[10px] tracking-[0.2em] text-[var(--color-muted-dark)]">
-                  {p.name}
+      {hero && (
+        <section className="px-7 pb-24">
+          <div className="font-mono text-[10px] tracking-[0.2em] text-[var(--color-muted-dark)] mb-6">
+            {'// FEATURED'}
+          </div>
+          <Link
+            href={`/shop/${hero.slug}`}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center group"
+          >
+            <div className="relative aspect-[3/4] bg-white/5 overflow-hidden">
+              {hero.images[0] ? (
+                <Image
+                  src={hero.images[0]}
+                  alt={hero.name}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  priority
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <span className="font-mono text-[10px] tracking-[0.2em] text-[var(--color-muted-dark)]">
+                    {hero.name}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div>
+              <div className="font-mono text-[10px] tracking-[0.25em] text-[var(--color-muted-dark)] mb-4">
+                [ NEW / {hero.dropId.toUpperCase().replace('-', '_')} ]
+              </div>
+              <h2 className="text-3xl md:text-5xl leading-tight mb-6">{hero.name}</h2>
+              <p className="font-mono text-xs leading-relaxed text-[var(--color-muted-dark)] mb-8 max-w-md">
+                {hero.description}
+              </p>
+              <div className="flex items-center gap-6">
+                <span className="font-mono text-sm tracking-[0.15em]">
+                  ₹ {hero.priceInr.toLocaleString('en-IN')}
+                </span>
+                <span className="inline-block bg-white text-black px-5 py-3 font-mono text-xs tracking-[0.25em] uppercase group-hover:bg-white/90">
+                  Shop Now →
                 </span>
               </div>
-              <div className="flex justify-between font-mono text-[10px] tracking-[0.15em] uppercase">
-                <span>{p.name}</span>
-                <span>₹ {p.priceInr.toLocaleString('en-IN')}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+            </div>
+          </Link>
+        </section>
+      )}
 
       <Footer surface="dark" />
     </SurfaceLayout>

@@ -17,7 +17,7 @@ export const products: Product[] = [
       { size: 'XXL', stock: 3 },
     ],
     dropId: 'drop-01',
-    status: 'live',
+    status: 'archived',
   },
   {
     slug: 'static-tee-bone',
@@ -35,7 +35,7 @@ export const products: Product[] = [
       { size: 'XXL', stock: 2 },
     ],
     dropId: 'drop-01',
-    status: 'live',
+    status: 'archived',
   },
   {
     slug: 'noise-tee-charcoal',
@@ -53,7 +53,7 @@ export const products: Product[] = [
       { size: 'XXL', stock: 2 },
     ],
     dropId: 'drop-01',
-    status: 'live',
+    status: 'archived',
   },
   {
     slug: 'cockroach-tee-tricolour',
